@@ -1,0 +1,83 @@
+.danger{
+    color:red;
+    font-size: 12px;
+    padding: 0px;
+}
+.form{
+    width:80%;
+    display:block;
+}
+.input{
+    width:200%;
+    text-align: left;
+    background-color: white;
+    padding: 5px;
+    border-radius: 15px;
+    border-style: solid;
+}
+.label{
+    width: 100%;
+    text-align: left;
+}
+.formElements{
+    list-style-type: none;
+    padding: 20px;
+    border-radius: 3px;
+}
+
+.formRow {
+    display: flex;
+    justify-content: flex-end;
+    padding: 0px;
+  }
+  .formRow > label {
+    padding: 0px;
+    flex: 1;
+  }
+  .formRow > input {
+    flex: 2;
+  }
+  .submitButton{
+    background-color: white;
+    padding: 5px;
+    border-radius: 15px;
+    border-style: solid;
+  }
+
+  .select{
+    background-color: white;
+    padding: 5px;
+    border-radius: 15px;
+    border-style: solid;
+}
+.itemsList{
+  display:block;
+}
+.addButton{
+  background-color: white;
+    padding: 5px;
+    border-radius: 15px;
+    border-style: solid;
+}
+
+.caption{
+  background-color: white;
+    border-color: whitesmoke;
+    padding: 5px;
+    border-radius: 10px;
+    border-top-right-radius: 0px;
+    border-bottom-right-radius: 0px;
+    border-style: solid;
+    border-right-style:none;
+}
+
+.delete{
+  background-color: white;
+  border-color: whitesmoke;
+    padding: 5px;
+    border-radius: 10px;
+    border-style: solid;
+    border-top-left-radius: 0px;
+    border-bottom-left-radius: 0px;
+    border-left-style:none;
+}

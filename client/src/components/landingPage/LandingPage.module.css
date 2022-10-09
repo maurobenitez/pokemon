@@ -1,0 +1,21 @@
+.container{
+    position: relative;
+    background-color: black;
+}
+
+.button{
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 20px;
+    background-color: white;
+    border-radius: 10px;
+    padding: 10px;
+}
+
+.img {
+    position: center;
+    max-width: 70%;
+    height: auto;
+} 
