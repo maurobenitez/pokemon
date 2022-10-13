@@ -52,8 +52,8 @@ describe('GET /pokemon route', () => {
   it('should not get pokemon', function(done){
     this.timeout(70000);
     agent.get('/pokemons?name=ekek99k').expect(200).end((req, res)=>{
-      var [lista] = res.body.pokemons;
-      expect(lista).to.equal(null);
+      var lista = res.body.pokemons;
+      expect(lista.length).to.equal(0);
       done();
     })
   });
