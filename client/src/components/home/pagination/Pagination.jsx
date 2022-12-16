@@ -21,9 +21,9 @@ const Pagination = () => {
         <div>
             {!loading && (cantPages>1)&&(
                 <div>
-                    <button name="prev" onClick={handleClick} className={styles.button}>&laquo;</button>
+                    <button name="prev" onClick={handleClick} className={styles.button}>❮</button>
                     <span>{page} / {cantPages}</span>
-                    <button name="next" onClick={handleClick} className={styles.button}>&raquo;</button>
+                    <button name="next" onClick={handleClick} className={styles.button}>❯</button>
                 </div>
             )}
         </div>

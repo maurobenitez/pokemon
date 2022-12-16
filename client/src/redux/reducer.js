@@ -1,4 +1,4 @@
-import { GET_TYPES, SEARCH_POKEMON, LOADING_DATA, GET_POKEMON_DETAIL, GO_TO_PAGE, SET_FILTERS, RECEIVE_POKEMONS} from "./actions";
+import { GET_TYPES, SEARCH_POKEMON, LOADING_DATA, GET_POKEMON_DETAIL, GO_TO_PAGE, SET_FILTERS, RECEIVE_POKEMONS, CREATE_POKEMON} from "./actions";
 
 import { sortAndFilter, getPage } from "../filtersAndPagination";
 
@@ -15,7 +15,8 @@ const initialState = {
         sortBy: "name",
         order: "ASC"
     },
-    page: 1
+    page: 1,
+    backendError:"no error"
 };
 
 
@@ -44,6 +45,7 @@ const rootReducer = (state = initialState, action) => {
                 types: action.payload
             }
         case GET_POKEMON_DETAIL:
+            console.log(action.payload);
             return {
                 ...state,
                 detail: action.payload,
@@ -53,6 +55,7 @@ const rootReducer = (state = initialState, action) => {
             return {
                 ...state,
                 pokemons: action.payload,
+                sortedAndFilteredPokemons: action.payload,
                 page: 1,
                 loading: false
             }
@@ -76,6 +79,15 @@ const rootReducer = (state = initialState, action) => {
 				sortedAndFilteredPokemons,
 				page: action.payload
 			}
+        case CREATE_POKEMON:
+            var error = "no error";
+            if (action.payload.error === "name must be unique")
+                error = action.payload.error;
+            
+            return {
+                ...state,
+                backendError: error
+            }
         default:
             return state;
     }

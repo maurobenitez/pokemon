@@ -2,7 +2,7 @@ import React from "react";
 import { createPokemon, getTypes } from "../../redux/actions";
 import { useDispatch, useSelector } from 'react-redux';
 import styles from "./CreatePokemon.module.css";
-import { validateInput } from '../../validator.js';
+import { validateInput, validateField } from '../../validator.js';
 import { validatorParams, errorMessages } from "./validatorParams";
 
 const CreatePokemon = () => {
@@ -18,6 +18,8 @@ const CreatePokemon = () => {
         types: [],
         type: -1
     });
+    const [type, setType] = React.useState(-1);
+    
     const [error, setError] = React.useState({});
 
     const dispatch = useDispatch();
@@ -26,23 +28,27 @@ const CreatePokemon = () => {
         dispatch(getTypes());
     }, [dispatch]);
 
-    const types = useSelector(state => state.types);
+    const backendError = useSelector(state => state.backendError);
 
+    React.useEffect(() => {
+        if(backendError==="name must be unique"){
+            alert(`Ya se encuentra creado un pokemon con el nombre ${input.name}`);
+            setError({...error, name: "Hay otro pokemon en la base de datos con el mismo nombre"});
+            
+        }
+    }, [backendError]);
+
+    const types = useSelector(state => state.types);
     const handleSubmit = (e) => {
         e.preventDefault();
-        var errors = validateInput(input, validatorParams, errorMessages);
+        var [isValid, errors] = validateInput(input, validatorParams, errorMessages);
         setError(errors);
-        if (!errors.name &&
-            !errors.image &&
-            !errors.hp &&
-            !errors.attack &&
-            !errors.defense &&
-            !errors.speed &&
-            !errors.height &&
-            !errors.weight){
-                dispatch(createPokemon(input));
-            }
-                            
+        if (isValid){
+            dispatch(createPokemon(input));
+            alert("cargando pokemon...")
+        }
+        setError(errors);
+                          
     };
 
     const handleChange = ({target:{name, value}}) => {
@@ -57,7 +63,8 @@ const CreatePokemon = () => {
             if (type==input.type) return true;
             return false;
         });
-        if (input.type != -1 && !aux)
+        if (aux != undefined) alert("tipo de pokemon ya añadido");
+        if (input.type != -1 && !aux && input.types.length <2)
         setInput({
             ...input,
             types: [...input.types, input.type],
@@ -71,48 +78,54 @@ const CreatePokemon = () => {
             types: types
         })
     }
+
+    const handleBlur = ({target: {name, value}}) => {
+        var errorMessage = validateField(value, validatorParams[name], errorMessages[name]);
+        setError({...error, [name]: errorMessage});
+    }
+
     return (
         <form onSubmit={handleSubmit}>
             <h1>Añadir pokemon</h1>
             <ul className={styles.formElements}>
                 <li className={styles.formRow}>
                     <label className={styles.label}>Nombre:</label>
-                    <input type="text" name="name" onChange={handleChange} className={styles.input}/>
+                    <input type="text" name="name" onChange={handleChange} onBlur={handleBlur} className={styles.input}/>
                 </li>
                 <p className={styles.danger}>{error.name}</p>
                 <li className={styles.formRow}>
                     <label className={styles.label}>Imagen:</label>
-                    <input type="text" name="image" onChange={handleChange} className={styles.input}/>
+                    <input type="text" name="image" onChange={handleChange} onBlur={handleBlur} className={styles.input}/>
                 </li>
                 <p className={styles.danger}>{error.image}</p>
                 <li className={styles.formRow}>
                     <label className={styles.label}>Vida:</label>
-                    <input type="text" name="hp" onChange={handleChange} className={styles.input}/>
+                    <input type="text" name="hp" onChange={handleChange} onBlur={handleBlur} className={styles.input}/>
                 </li>
                 <p className={styles.danger}>{error.hp}</p>
                 <li className={styles.formRow}>
                     <label className={styles.label}>Ataque:</label>
-                    <input type="text" name="attack" onChange={handleChange} className={styles.input}/>
+                    <input type="text" name="attack" onChange={handleChange} onBlur={handleBlur} className={styles.input}/>
                 </li>
                 <p className={styles.danger}>{error.attack}</p>
                 <li className={styles.formRow}>
                     <label className={styles.label}>Defensa:</label>
-                    <input type="text" name="defense" onChange={handleChange} className={styles.input}/>
+                    <input type="text" name="defense" onChange={handleChange} onBlur={handleBlur} className={styles.input}/>
                 </li>
                 <p className={styles.danger}>{error.defense}</p>
                 <li className={styles.formRow}>
                     <label className={styles.label}>Velocidad:</label>
-                    <input type="text" name="speed" onChange={handleChange} className={styles.input}/>
+                    <input type="text" name="speed" onChange={handleChange} onBlur={handleBlur} className={styles.input}/>
                 </li>
                 <p className={styles.danger}>{error.speed}</p>
                 <li className={styles.formRow}>
                     <label className={styles.label}>Altura:</label>
-                    <input type="text" name="height" onChange={handleChange} className={styles.input}/>
+                    <input type="text" name="height" onChange={handleChange} onBlur={handleBlur} className={styles.input}/>
                 </li>
                 <p className={styles.danger}>{error.height}</p>
                 <li className={styles.formRow}>
                     <label className={styles.label}>Peso:</label>
-                    <input type="text" name="weight" onChange={handleChange} className={styles.input}/>
+                    <input type="text" name="weight" onChange={handleChange} onBlur={handleBlur} className={styles.input}/>
                 </li>
                 <p className={styles.danger}>{error.weight}</p>
             </ul>

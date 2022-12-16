@@ -19,7 +19,7 @@ describe('GET /pokemon route', () => {
   await conn.sync({ force: true })
   });
 
-  it('should get valid height property', function(done){
+  xit('should get valid height property', function(done){
     this.timeout(200000);
     
     agent.get('/pokemons').expect(200).end((req, res)=>{
@@ -29,7 +29,7 @@ describe('GET /pokemon route', () => {
     });
   });
 
-  it('should get pokemons from api and db', async function(){
+  xit('should get pokemons from api and db', async function(){
     this.timeout(200000);
     await Pokemon.create(pokemon);
     var {_body: {pokemons}} = await agent.get('/pokemons').expect(200);

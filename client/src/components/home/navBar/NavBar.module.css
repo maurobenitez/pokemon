@@ -1,0 +1,30 @@
+@font-face {
+    font-family: pokemon;
+    src: url(../../../res/PocketMonk-15ze.ttf);
+}
+.nav{
+    font-family: pokemon;
+    align-items: center;
+    display:flex;
+    justify-content: space-between;
+    font-size: 30px;
+    text-align: center;
+    color: white;
+    padding: 5px;
+    margin: 0px 0px 5px 0px;
+    background: rgb(195,163,34);
+    background: linear-gradient(0deg, rgba(195,163,34,1) 15%, rgba(253,233,45,1) 100%); 
+    box-shadow: rgba(0, 0, 0, 0.19) 0px 10px 20px, rgba(0, 0, 0, 0.23) 0px 6px 6px;
+}
+
+.button{
+    font-family:Arial, Helvetica, sans-serif;
+    font-size: 14px;
+    background: rgb(34,193,195);
+    background: linear-gradient(0deg, rgba(34,193,195,1) 0%, rgba(45,46,253,1) 100%); 
+    border-radius: 5px;
+    border-style:none;
+    margin: 2px;
+    padding: 10px;
+    color:white;
+  }

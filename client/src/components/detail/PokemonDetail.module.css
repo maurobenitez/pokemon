@@ -1,0 +1,122 @@
+@font-face {
+    font-family: pixelated;
+    src: url(../../res/SummerPixel22Regular-jE0W7.ttf);
+}
+.notFound{
+    text-align: center;
+    font-weight: bold;
+    font-size:20px;
+    margin: 30px;
+    color:darkslategray;
+}
+
+.background{
+    position: center;
+    max-width: 100%;
+    height: auto;
+}
+.stats{
+    position:relative;
+    left: 450px;
+    bottom: 330px;
+    margin:0px;
+    font-family: pixelated;
+}
+.others{
+    position:relative;
+    left: 570px;
+    bottom: 400px;
+    margin:0px;
+    font-family: pixelated;
+}
+.imageContainer{
+    position:relative;
+    display:flex;
+    flex-wrap: wrap;
+    flex-direction: column;
+    justify-content: center;    
+    align-items: center;
+    bottom: 420px;
+    left: 190px;
+    width: 120px;
+}
+.image{
+    height: 80px;
+    width: auto;
+}
+.height{
+    position:relative;
+    left: 520px;
+    bottom: 310px;
+    margin: 0px;
+}
+.card{
+    background-image: url(../../res/detailBackground.png);
+    width: 720px;
+    height: 441px;
+    background-repeat: no-repeat;
+    flex-direction: column;
+    align-items: flex-start;
+    margin: 30px;
+}
+.center{
+    display:flex;
+    justify-content: center;
+    align-items: flex-start;
+
+}
+.properties{
+    display: flex;
+    flex-direction: column;
+    align-items:flex-start;
+    justify-content: flex-end;
+}
+.loadingImage{
+    margin: 30px;
+}
+.notFoundImage{
+    margin: 30px;
+    width: 450px;
+    height: auto;
+}
+.name{
+    margin:0px;
+    padding:0px;
+    font-size: large;
+    font-family: monospace;
+}
+.idContainer{
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    left: 224px;
+    bottom: 323px;
+    width: 30px;
+}
+.id{
+    font-family: Arial, Helvetica, sans-serif;
+    font-weight: bolder;
+}
+.typesContainer{
+    position: relative;
+    display:flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    left: 600px;
+    bottom: 552px;
+    width: 30px;
+}
+.type{
+    font-size: 12px;
+    font-weight: bold;
+    margin: 1px;
+    background-color: red;
+    border-color: black;
+    border-radius: 10px;
+    color:white;
+    border-style: solid;
+    border-width: 2px;
+}

@@ -39,7 +39,7 @@ export const receivePokemons = (pokemons) =>
 export const getPokemonDetail = (id) =>
     async dispatch =>{
         dispatch(loadingData());
-        var {data: {pokemon}} = await axios.get(`http://localhost:3001/pokemons/${id}`);
+        var {data: {pokemon}} = await axios.get(`http://localhost:3001/pokemons/${id}`, { withCredentials: true });
         dispatch({type: GET_POKEMON_DETAIL, payload: pokemon});
     }
 
@@ -47,10 +47,9 @@ export const goToPage = (page) =>
     ({type: GO_TO_PAGE, payload: page})
 
 export const createPokemon = (pokemon) =>
-    async () =>{
-        console.log("aquí 1");
-        await axios.post('http://localhost:3001/pokemons', pokemon);
-        console.log("aquí 2");
+    async dispatch => {
+        var {data} = await axios.post('http://localhost:3001/pokemons', pokemon);
+        dispatch({type: CREATE_POKEMON, payload: data});
     }
 
 export const setFilters = (filter) =>

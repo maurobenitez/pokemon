@@ -40,7 +40,7 @@ const Filters = () => {
                         <option value="api">Api</option>
                     </select>
                     <select name="sortBy" onChange={onChangeHandler} className={styles.select}>
-                        <option value="">Ordenar por...</option>
+                        <option value="name">Ordenar por...</option>
                         <option value="name">Nombre</option>
                         <option value="attack">Ataque</option>
                     </select>

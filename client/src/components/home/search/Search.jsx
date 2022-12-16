@@ -13,6 +13,7 @@ const Search = () =>{
     const onClickHandler = (e) =>{
         dispatch(searchPokemon(searchTerm));
         setSearchTerm("");
+
     };
     const loading = useSelector(state=>state.loading);
     return (
@@ -20,7 +21,9 @@ const Search = () =>{
             {!loading && (
                 <div>
                     <input type="text" onChange={onChangeHandler} className={styles.search}/>
-                    <button onClick={onClickHandler} className={styles.search}>Buscar</button>
+                    
+                        <button onClick={onClickHandler} className={styles.search}>Buscar</button>
+                    
                 </div>
             )}
         </div>

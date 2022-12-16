@@ -1,84 +1,49 @@
 const { Router } = require('express');
 const axios = require('axios');
 const { Pokemon, Type, conn, Op} = require("../db.js");
-const {extractFieldsFromPokemonData, queryOptions, getPokemonMainData, loadTypes } = require("../helperFunctions");
+const {extractFieldsFromPokemonData, getPokemonMainData, loadTypes, getDataFromUrl, getAllPokemonsFromDb, getPokemonFromDbById, getPokemonFromDbByName } = require("../helperFunctions");
 const router = Router();
 
 // Configurar los routers
 // Ejemplo: router.use('/auth', authRouter);
 
-var pokemonsCache = [];
+/* Ésta es una cache donde se guardan los pokemons */
+var pokemonsFromApi = null;
 
-router.get('/pokemons/:id', async (req, res)=>{
+router.get('/pokemons/:id', async ({params:{id}, session}, res)=>{
     try{
-        var {id} = req.params;
         var { data } = await axios.get(`https://pokeapi.co/api/v2/pokemon/${id}`);
         var pokemon = extractFieldsFromPokemonData(data);
-        res.send({pokemon});
     }catch(error){
-        var id = parseInt(id);
-        var query = {where: {id: id}};
-        var pokemon = await Pokemon.findAll({
-            ...queryOptions,
-            query,
-            plain: true
-        });
-        if (pokemon) res.send({pokemon});
-        else res.send({pokemon: null});
+        var pokemonFromDb = await getPokemonFromDbById(parseInt(id));
+        var pokemon = pokemonFromDb ? pokemonFromDb : null;
     }
+    session.probando = "probando";
+    res.send({pokemon});
 });
 
-router.get('/pokemons', async (req, res)=>{
-    var { name: pokemonName } = req.query;
-    if (pokemonName == null || pokemonName == ""){
-        if (pokemonsCache.length == 0){
-            var {data: {results}} = await axios.get(`https://pokeapi.co/api/v2/pokemon?limit=40`);
-                var pokemonsFromApi = await Promise.all(results.map(async ({url})=>{
-                    var connectionSuccess = false;
-                    while (connectionSuccess === false){
-                        try{
-                            var pokemonData =  await getPokemonMainData(url);
-                            connectionSuccess = true;
-                            return pokemonData;
-                        }catch(error){
-                            console.log(`intento fallido con la url ${url}, reintentando`);
-                        }
-                    }
-                }));
-            
-            
-            pokemonsCache = pokemonsFromApi;
-        }else{
-            var pokemonsFromApi = pokemonsCache;
+router.get('/pokemons', async ({query: {name: pokemonName}}, res)=>{
+    if (!pokemonName){
+        if (!pokemonsFromApi){
+            var {data: {results: pokemonsRaw}} = await axios.get(`https://pokeapi.co/api/v2/pokemon?limit=40`);
+            var pokemonsFromApiPromises = pokemonsRaw.map(async ({url})=>{
+                var data = await getDataFromUrl(url);
+                return getPokemonMainData(data);                       
+            });
+            pokemonsFromApi = await Promise.all(pokemonsFromApiPromises);
         }
-        var pokemonsFromDb = await Pokemon.findAll({
-            ...{attributes: ["id", "name", "image", "attack"]},
-            ...queryOptions,
-        });
+        var pokemonsFromDb = await getAllPokemonsFromDb();
         var pokemons = [...pokemonsFromDb, ...pokemonsFromApi];
-        res.send({pokemons});    
     }else{
         try{
-            var url = `https://pokeapi.co/api/v2/pokemon/${pokemonName}`;
-            var pokemonFromApi = await getPokemonMainData(url);
-            res.send({pokemons: [pokemonFromApi]})
+            var { data } = await axios.get(`https://pokeapi.co/api/v2/pokemon/${pokemonName}`);
+            var pokemons = [getPokemonMainData(data)];
         }catch(error){
-            var query = {where: {name: pokemonName}};
-            /* var query = {where: {
-                name: {
-                  [Op.like]: `%${pokemonName}%`
-                }
-              }}; */
-            var pokemonFromDb = await Pokemon.findAll({
-                ...{attributes: ["id", "name", "image", "attack"]},
-                ...queryOptions,
-                ...query,
-                plain: true
-            });
-            if (pokemonFromDb) res.send({pokemons: [pokemonFromDb]});
-            else res.send({pokemons:[]});
+            var pokemonFromDb = await getPokemonFromDbByName(pokemonName);
+            pokemons = pokemonFromDb ? [pokemonFromDb] : [];
         }
-    }        
+    }
+    res.send({pokemons});
 });
 
 router.post("/pokemons", async (req, res)=>{
@@ -98,10 +63,10 @@ router.post("/pokemons", async (req, res)=>{
 });
 
 router.get("/types", async (req, res)=>{
-    if (await Type.count()===0) await loadTypes();
+    var dbHasTypes = await Type.count();
+    if (!dbHasTypes) await loadTypes();
     var types = await Type.findAll();
     res.send(types); 
 })
-
 
 module.exports = router;

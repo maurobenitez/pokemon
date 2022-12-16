@@ -6,9 +6,14 @@ const LandingPage = () => {
     return (
         <div className={styles.container}>
             <img className={styles.img} src={backgroundImage} alt="" />
-            <Link to="/pokemons">
-                <button className={styles.button}>Ingresar a main</button>
-            </Link>
+            <div className={styles.jumbo}>
+                <div className={styles.title}>
+                    Henry Pokemon
+                </div>
+                <Link to="/pokemons">
+                    <button className={styles.button}>Ingresar</button>
+                </Link>
+            </div>
         </div>
     );
 }

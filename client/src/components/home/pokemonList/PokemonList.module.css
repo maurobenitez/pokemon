@@ -4,3 +4,19 @@
     justify-content: center;
     align-content: flex-start;
 }
+.loadingImage{
+    margin: 30px;
+}
+
+.notFoundImage{
+    margin: 30px;
+    width: 450px;
+    height: auto;
+}
+.notFound{
+    text-align: center;
+    font-weight: bold;
+    font-size:20px;
+    margin: 30px;
+    color:darkslategray;
+}

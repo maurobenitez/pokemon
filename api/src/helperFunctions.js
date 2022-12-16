@@ -1,6 +1,8 @@
-const { Type } = require("./db.js");
+const { Type, Pokemon } = require("./db.js");
 const axios = require('axios');
 
+
+/* este objeto contiene los parámetros para para traer junto con un pokemon con sequelize, sus types*/
 const queryOptions = {
     include: {
         model: Type,
@@ -8,11 +10,11 @@ const queryOptions = {
         through: { attributes: [] },
     }
 };
+
 /* a partir de un objeto con los datos de un type, genera un nuevo objeto con los siguientes campos:
- id y name. */
- 
+ id y name. */ 
 function extractFieldsFromTypeData({name, url}){
-    urlList = url.split("/");
+    var urlList = url.split("/");
     var id = urlList[urlList.length - 2];
     return { id, name };
 }
@@ -31,24 +33,26 @@ function extractFieldsFromPokemonData(pokemonData) {
     return pokemon;
 }
 
-
-/* A partir de la url de un pokemon devuelve un objeto con los siguientes campos:
-name, image, types y attack */
-
-async function getPokemonMainData(url) {
-    var {
-        data: {
-            sprites: { other: { dream_world: { front_default: image } } }, types, stats, name, id
+/* usa axios para traer datos de una url, y si hay un error, reintenta hasta que lo logre*/
+async function getDataFromUrl(url){
+    var connectionSuccess = false;
+    while (!connectionSuccess){
+        try{
+            var {data} = await axios.get(url);
+            connectionSuccess = true;
+        }catch(error){
+            console.log(`Conexión fallida con la url ${url}, reintentando`);
         }
-    } = await axios.get(url);
-    /* en esta parte tomo el objeto types, y para cada type me quedo solo con los campos id y name */
-    types = types.map(({ type: { name, url } }) => {
-        urlList = url.split("/");
-        let id = urlList[urlList.length - 2];
-        return { id, name };
-    });
-    /* aquí busco el valor de attack que está en el objeto stats, y guardo
-    el resultado en la variable attack */
+    }
+    return data;
+}
+
+/* A partir de un objeto con los datos de un pokemon devuelve otro objeto con los siguientes campos:
+name, image, types y attack */
+async function getPokemonMainData(pokemonData) {
+    var { sprites, types, stats, name, id } = pokemonData;
+    var { other: { dream_world: { front_default: image } } } = sprites;
+    types = types.map(({ type }) => extractFieldsFromTypeData(type));
     var attack;
     stats.forEach(stat => {
         if (stat.stat.name === "attack")
@@ -65,4 +69,37 @@ async function loadTypes() {
     await Type.bulkCreate(types);
 }
 
-module.exports = {queryOptions, extractFieldsFromPokemonData, getPokemonMainData, loadTypes };
+/* esta función busca en la base de datos un pokemon con un id determinado */
+async function getPokemonFromDbById(pokemonId){
+    var query = {where: {id: pokemonId}};
+    var pokemonFromDb = await Pokemon.findAll({
+        ...queryOptions,
+        query,
+        plain: true
+    });
+    return pokemonFromDb;
+}
+
+/* Esta función busca un pokemon de la db que coincida con un nombre determinado. Del pokemon que devuelve trae los atributos id, name, image, types y attack */
+async function getPokemonFromDbByName(pokemonName){
+    var query = {where: {name: pokemonName}};
+    var pokemonFromDb = await Pokemon.findAll({
+        ...{attributes: ["id", "name", "image", "attack"]},
+        ...queryOptions,
+        ...query,
+        plain: true
+    });
+    return pokemonFromDb;
+}
+/* Esta función busca todos los pokemons de la db, junto con sus tipos. Los atributos que trae son:
+id, name, image, types y attack */
+
+async function getAllPokemonsFromDb(){
+    var pokemonsFromDb = await Pokemon.findAll({
+        ...{attributes: ["id", "name", "image", "attack"]},
+        ...queryOptions,
+    });
+    return pokemonsFromDb;
+}
+
+module.exports = {queryOptions, extractFieldsFromPokemonData, getPokemonMainData, loadTypes, getDataFromUrl, getPokemonFromDbById, getPokemonFromDbByName, getAllPokemonsFromDb };
