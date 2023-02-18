@@ -39,7 +39,7 @@ export const receivePokemons = (pokemons) =>
 export const getPokemonDetail = (id) =>
     async dispatch =>{
         dispatch(loadingData());
-        var {data: {pokemon}} = await axios.get(`http://localhost:3001/pokemons/${id}`, { withCredentials: true });
+        var {data: {pokemon}} = await axios.get(`http://localhost:3001/pokemons/${id}`);
         dispatch({type: GET_POKEMON_DETAIL, payload: pokemon});
     }
 

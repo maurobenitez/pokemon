@@ -16,7 +16,7 @@ const initialState = {
         order: "ASC"
     },
     page: 1,
-    backendError:"no error"
+    backendError:"no error",
 };
 
 
@@ -37,7 +37,8 @@ const rootReducer = (state = initialState, action) => {
                 pokemons,
                 allPokemons: action.payload,
                 page: 1,
-                loading: false
+                loading: false,
+                backendError: "no error"
             }
         case GET_TYPES:
             return {
@@ -45,11 +46,11 @@ const rootReducer = (state = initialState, action) => {
                 types: action.payload
             }
         case GET_POKEMON_DETAIL:
-            console.log(action.payload);
             return {
                 ...state,
                 detail: action.payload,
-                loading: false
+                loading: false,
+                backendError: "no error"
             }
         case SEARCH_POKEMON:
             return {
@@ -57,7 +58,8 @@ const rootReducer = (state = initialState, action) => {
                 pokemons: action.payload,
                 sortedAndFilteredPokemons: action.payload,
                 page: 1,
-                loading: false
+                loading: false,
+                backendError: "no error"
             }
         case SET_FILTERS:
             var sortedAndFilteredPokemons = sortAndFilter(state.allPokemons, action.payload);
@@ -83,7 +85,9 @@ const rootReducer = (state = initialState, action) => {
             var error = "no error";
             if (action.payload.error === "name must be unique")
                 error = action.payload.error;
-            
+            else{
+                error = "pokemon created sucessfully"
+            }
             return {
                 ...state,
                 backendError: error

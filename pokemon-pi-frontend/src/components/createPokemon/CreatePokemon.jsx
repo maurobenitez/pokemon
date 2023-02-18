@@ -18,10 +18,10 @@ const CreatePokemon = () => {
         types: [],
         type: -1
     });
-    const [type, setType] = React.useState(-1);
     
     const [error, setError] = React.useState({});
 
+    
     const dispatch = useDispatch();
 
     React.useEffect(() => {
@@ -34,7 +34,8 @@ const CreatePokemon = () => {
         if(backendError==="name must be unique"){
             alert(`Ya se encuentra creado un pokemon con el nombre ${input.name}`);
             setError({...error, name: "Hay otro pokemon en la base de datos con el mismo nombre"});
-            
+        }else if (backendError==="pokemon created sucessfully"){
+            alert('pokemon creado de forma exitosa')
         }
     }, [backendError]);
 
@@ -45,10 +46,8 @@ const CreatePokemon = () => {
         setError(errors);
         if (isValid){
             dispatch(createPokemon(input));
-            alert("cargando pokemon...")
         }
-        setError(errors);
-                          
+        setError(errors);                          
     };
 
     const handleChange = ({target:{name, value}}) => {
